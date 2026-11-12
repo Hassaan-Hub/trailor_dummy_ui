@@ -1,20 +1,27 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import type { ReactNode } from 'react'
 
 type Theme = 'light' | 'dark'
 
-interface ThemeContextType {
+interface ThemeContextValue {
   theme: Theme
   toggleTheme: () => void
+  setTheme: (t: Theme) => void
 }
 
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
+const ThemeContext = createContext<ThemeContextValue>({
+  theme: 'light',
+  toggleTheme: () => {},
+  setTheme: () => {},
+})
 
-export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(() => {
-    const stored = localStorage.getItem('theme')
-    if (stored === 'dark' || stored === 'light') return stored
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+export const useTheme = () => useContext(ThemeContext)
+
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [theme, setThemeState] = useState<Theme>(() => {
+    if (typeof window === 'undefined') return 'light'
+    const saved = localStorage.getItem('stitchcraft-theme') as Theme | null
+    if (saved === 'light' || saved === 'dark') return saved
+    return 'light'
   })
 
   useEffect(() => {
@@ -24,20 +31,15 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     } else {
       root.classList.remove('dark')
     }
-    localStorage.setItem('theme', theme)
+    localStorage.setItem('stitchcraft-theme', theme)
   }, [theme])
 
-  const toggleTheme = () => setTheme((prev) => (prev === 'light' ? 'dark' : 'light'))
+  const toggleTheme = () => setThemeState((prev) => (prev === 'light' ? 'dark' : 'light'))
+  const setTheme = (t: Theme) => setThemeState(t)
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>
       {children}
     </ThemeContext.Provider>
   )
-}
-
-export function useTheme() {
-  const ctx = useContext(ThemeContext)
-  if (!ctx) throw new Error('useTheme must be used within ThemeProvider')
-  return ctx
 }

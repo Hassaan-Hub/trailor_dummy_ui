@@ -1,183 +1,67 @@
-# StitchCraft — Tailor Management System
+# StitchCraft — Tailor Management System (Mobile-First)
 
-A complete, modern, professional, and fully responsive frontend UI for a Tailor Management System (Darzi / Tailoring Shop Management). This is a **frontend-only prototype** with mock/static data — no backend, no real API calls, no authentication, no database.
-
-Built to look and feel like a real working product, ready for client demos.
-
----
+A polished, **mobile-first** frontend prototype of a Tailor / Darzi shop management app. Built as a client demo — **no backend, no API calls, no authentication, no database**. All data is static mock data.
 
 ## Tech Stack
 
-| Technology | Purpose |
-|---|---|
-| **React 19** | UI framework |
-| **Vite** | Build tool & dev server |
-| **TypeScript** | Type safety |
-| **Tailwind CSS v4** | Styling & theming |
-| **React Router v7** | Navigation |
-| **Lucide React** | Icons |
-| **Framer Motion** | Animations (optional) |
+- React 19 + Vite + TypeScript
+- Tailwind CSS v4 (`@tailwindcss/vite`, `@theme` directive)
+- React Router v7
+- Framer Motion (page transitions)
+- Lucide React (icons)
+- clsx + tailwind-merge (`cn()` helper)
 
----
-
-## Features
-
-### Core Modules
-
-1. **Dashboard** — Quick stats (total/pending/completed orders, revenue, active customers), recent orders table, orders-this-week bar chart, popular garments chart, quick action buttons.
-
-2. **Orders Management** — Full order list with status filters (Pending, In Progress, Ready for Trial, Ready for Delivery, Delivered, Cancelled), search by customer/order ID, priority badges, delivery date tracking with urgency indicators, summary cards.
-
-3. **Create New Order (Multi-Step Flow)** — The most detailed module:
-   - **Step 1:** Customer selection (search existing or create new)
-   - **Step 2:** Garment type selection (12 Indian garment types with visual cards)
-   - **Step 3:** Detailed measurements (17 fields — upper body + lower body)
-   - **Step 4:** Fabric selection + style options (collars, cuffs, pockets, closures)
-   - **Step 5:** Delivery date, trial date, priority, advance payment, notes
-   - **Live order summary** sidebar showing all selections + price calculation in real-time
-
-4. **Measurements Module** — Customer-wise measurement history, full upper/lower body measurement display, measurement templates, add new measurement records via modal.
-
-5. **Customers** — Customer grid with search, customer profile page showing contact info, measurement history, past orders, total spent, stats summary. Add/edit customer via modal.
-
-6. **Inventory / Fabric Management** — Fabric list with filters by type, stock quantity, price per meter, supplier info, low-stock alerts with visual warnings, stock value summary, add fabric modal.
-
-7. **Garment Catalog** — 12 garment types with visual cards, style variations (collar types, cuff types, pocket styles, closures, necklines), price ranges, detailed view modal.
-
-8. **Messaging / Communication** — Internal chat interface with customers, notification feed, quick action buttons (trial reminder, delivery reminder, measurement confirmation), conversation list.
-
-9. **Settings** — Shop details, logo placeholder, measurement units (inches/cm), currency, tax rate, notification preferences (toggles), dark mode toggle, profile section.
-
-### UI Features
-
-- **Dark mode** — Full dark/light theme toggle with persistence (localStorage)
-- **Responsive** — Works on mobile, tablet, and desktop. Collapsible sidebar.
-- **Status badges** — Color-coded for each order status and priority level
-- **Toast notifications** — Success, error, and info toasts for user actions
-- **Loading skeletons** — Skeleton components available for loading states
-- **Empty states** — Friendly empty state illustrations/messages throughout
-- **Animations** — Subtle animate-in/fade-in transitions
-- **Premium theme** — Deep navy + warm gold/amber accents, Playfair Display + Inter fonts
-
-### Mock Data
-
-- **10 sample customers** with Indian names, contact info, cities, and order history
-- **15 sample orders** across all statuses with realistic garments and measurements
-- **12 fabric types** with stock levels and pricing
-- **12 garment types** (Shirt, Trouser, Kurta, Pathani, Sherwani, Suit, Blazer, Salwar Suit, Lehenga, Coat, Waistcoat, Pant)
-- **8 measurement records** with full upper/lower body values
-- **7 messages/notifications** for the messaging module
-
----
-
-## Getting Started
-
-### Prerequisites
-
-- **Node.js** 18+ (recommended: 20+)
-- **npm** or **yarn**
-
-### Installation
+## Run locally
 
 ```bash
-# Clone the project (or extract the folder)
-cd trailer_menagmente
-
-# Install dependencies
 npm install
-```
-
-### Run Development Server
-
-```bash
 npm run dev
 ```
 
-The app will start at **http://localhost:5173**
+Open the printed URL (usually `http://localhost:5173`). For the best experience, open your browser's DevTools device toolbar and set a phone viewport (375px–430px), or just narrow the window. The app is designed for mobile widths and centers nicely on larger screens.
 
-### Build for Production
-
-```bash
-npm run build
-```
-
-Output will be in the `dist/` folder.
-
-### Preview Production Build
+Other commands:
 
 ```bash
-npm run preview
+npm run build     # type-check + production build
+npm run preview   # preview the production build
 ```
 
----
+## Screens
 
-## Project Structure
+| Route | Screen |
+|---|---|
+| `/` | Home / Dashboard — greeting, stats, recent orders (horizontal scroll), quick actions |
+| `/orders` | Orders — filter chips, search, order cards, FAB |
+| `/create-order` | **5-step New Order flow** — Customer → Garment → Measurements → Fabric & Style → Review & Confirm |
+| `/measurements` | Measurements — customer list, saved measurement cards, 6 standard templates, add form |
+| `/customers` | Customers — searchable list, add customer sheet |
+| `/customers/:id` | Customer profile — contact, stats, measurements, order history |
+| `/more` | More / Profile — dark mode toggle, links to all sub-screens |
+| `/inventory` | Fabric inventory — filters, low stock alerts, stock bars |
+| `/catalog` | Garment catalog — 12 garment types with style options |
+| `/notifications` | Notifications — read/unread, quick reminder templates |
+| `/settings` | Settings — shop details, units, tax, theme, toggles |
 
-```
-src/
-├── components/
-│   ├── ui/              # Reusable UI components
-│   │   ├── Avatar.tsx
-│   │   ├── Button.tsx
-│   │   ├── Card.tsx
-│   │   ├── EmptyState.tsx
-│   │   ├── Input.tsx
-│   │   ├── Modal.tsx
-│   │   ├── Skeleton.tsx
-│   │   ├── StatusBadge.tsx
-│   │   └── Toast.tsx
-│   └── layout/          # Layout components
-│       ├── Layout.tsx
-│       ├── Sidebar.tsx
-│       └── TopBar.tsx
-├── context/
-│   └── ThemeContext.tsx # Dark/light theme provider
-├── data/
-│   └── mockData.ts      # All mock/static data
-├── lib/
-│   └── utils.ts         # Utility functions (cn, formatDate, formatCurrency, etc.)
-├── pages/
-│   ├── Dashboard.tsx
-│   ├── Orders.tsx
-│   ├── CreateOrder.tsx       # Multi-step order creation flow
-│   ├── Measurements.tsx
-│   ├── Customers.tsx
-│   ├── CustomerProfile.tsx
-│   ├── Inventory.tsx
-│   ├── Catalog.tsx
-│   ├── Messages.tsx
-│   └── Settings.tsx
-├── types/
-│   └── index.ts         # TypeScript type definitions
-├── App.tsx              # Root component with routes
-├── main.tsx             # Entry point
-└── index.css            # Global styles & Tailwind theme
-```
+## Mobile UX details
 
----
+- **Bottom navigation** with a raised center "New Order" action button
+- **Safe area** handling via `env(safe-area-inset-*)` and `viewport-fit=cover`
+- **Sticky bottom CTA** in the multi-step order flow
+- **Progress indicator** across all 5 steps
+- **Bottom sheets** instead of desktop modals (native-feeling)
+- **Page transitions** via Framer Motion
+- **Pull-to-refresh** on Orders, Customers and Measurements lists (swipe down at the top)
+- **Skeleton loaders**, empty states, toast messages, status badges with colors
+- **Touch-friendly** tap targets, `active:scale` press feedback, no iOS input zoom
+- **Light / dark mode** with `localStorage` persistence
 
-## Theme & Colors
+## Theme
 
-| Color | Hex | Usage |
-|---|---|---|
-| Navy 900 | `#0a1f33` | Sidebar background, dark mode base |
-| Navy 800 | `#102a43` | Primary dark surfaces |
-| Gold 500 | `#d4881a` | Primary accent, buttons, highlights |
-| Gold 400 | `#e6a02f` | Hover states, icons |
-| Gold 300 | `#ecb75e` | Light accents |
+Deep navy (`#0F172A`) + warm gold/amber (`#F59E0B`) on soft white/gray surfaces. Fonts: Inter (UI) + Playfair Display (display accents).
 
----
+## Mock data
 
-## Notes
+10 Indian customers, 15 orders across all statuses, 12 fabrics, 12 garment types, 8 measurement records, 7 notifications, 6 measurement templates. All in `src/data/mockData.ts`.
 
-- This is a **dummy/prototype** — all data is static mock data. No data persists between sessions.
-- The "Create Order" flow shows a success toast but does not actually save the order.
-- All customer actions (add, edit, message) are visual only.
-- Dark mode preference is saved in `localStorage`.
-- The sidebar is collapsible on desktop and slide-out on mobile.
-
----
-
-## License
-
-This is a demo project for client presentation purposes.
+> This is a prototype: forms show success toasts but do not persist anything.

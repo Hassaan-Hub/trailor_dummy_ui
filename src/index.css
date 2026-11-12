@@ -1,9 +1,13 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* Brand Colors - Navy */
+  /* Fonts */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Playfair Display', Georgia, serif;
+
+  /* Navy palette */
   --color-navy-50: #f0f4f8;
   --color-navy-100: #d9e2ec;
   --color-navy-200: #bcccdc;
@@ -13,113 +17,163 @@
   --color-navy-600: #334e68;
   --color-navy-700: #243b53;
   --color-navy-800: #102a43;
-  --color-navy-900: #0a1f33;
-  --color-navy-950: #061325;
+  --color-navy-900: #0f172a;
+  --color-navy-950: #0a1424;
 
-  /* Brand Colors - Gold */
-  --color-gold-50: #fdf8ed;
-  --color-gold-100: #f8eac8;
-  --color-gold-200: #f2d394;
-  --color-gold-300: #ecb75e;
-  --color-gold-400: #e6a02f;
-  --color-gold-500: #d4881a;
-  --color-gold-600: #b56a14;
-  --color-gold-700: #924e14;
-  --color-gold-800: #783e17;
-  --color-gold-900: #663417;
-
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-serif: 'Playfair Display', Georgia, serif;
+  /* Gold/Amber palette */
+  --color-gold-50: #fffbeb;
+  --color-gold-100: #fef3c7;
+  --color-gold-200: #fde68a;
+  --color-gold-300: #fcd34d;
+  --color-gold-400: #fbbf24;
+  --color-gold-500: #f59e0b;
+  --color-gold-600: #d97706;
+  --color-gold-700: #b45309;
+  --color-gold-800: #92400e;
+  --color-gold-900: #78350f;
 }
 
 @layer base {
   * {
-    border-color: var(--color-navy-100);
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
 
   body {
     font-family: var(--font-sans);
-    background-color: #f8fafc;
-    color: var(--color-navy-900);
-    -webkit-font-smoothing: antialiased;
-    margin: 0;
+    overscroll-behavior-y: none;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
   }
 
-  .dark body {
-    background-color: var(--color-navy-950);
-    color: var(--color-navy-100);
+  input, textarea, select {
+    user-select: text;
+    -webkit-user-select: text;
+    font-size: 16px; /* Prevent zoom on iOS */
   }
 
-  h1, h2, h3, h4 {
-    font-weight: 700;
-    letter-spacing: -0.02em;
+  /* Safe area helpers */
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .safe-top-px {
+    padding-top: max(env(safe-area-inset-top), 0px);
+  }
+  .safe-bottom-px {
+    padding-bottom: max(env(safe-area-inset-bottom), 0px);
   }
 
-  /* Scrollbar */
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+  /* Scrollbar hide for mobile */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
-  ::-webkit-scrollbar-track {
-    background: transparent;
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
-  ::-webkit-scrollbar-thumb {
-    background: var(--color-navy-200);
-    border-radius: 3px;
-  }
-  .dark ::-webkit-scrollbar-thumb {
-    background: var(--color-navy-700);
+
+  /* Smooth scroll */
+  .scroll-smooth-touch {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
   }
 }
 
-@layer utilities {
-  .animate-in {
-    animation: animate-in 0.3s ease-out;
+/* Page transition animations */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-  @keyframes animate-in {
-    from {
-      opacity: 0;
-      transform: translateY(8px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
   }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
 
-  .fade-in {
-    animation: fadeIn 0.2s ease-out;
-  }
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
   }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
 
-  .slide-in-right {
-    animation: slideInRight 0.3s ease-out;
+@keyframes sheetUp {
+  from {
+    transform: translateY(100%);
   }
+  to {
+    transform: translateY(0);
+  }
+}
 
-  @keyframes slideInRight {
-    from {
-      opacity: 0;
-      transform: translateX(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
 
-  .shimmer {
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-  }
+.animate-slide-up {
+  animation: slideUp 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.animate-slide-in-right {
+  animation: slideInRight 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.animate-fade-in {
+  animation: fadeIn 0.3s ease both;
+}
+.animate-scale-in {
+  animation: scaleIn 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.animate-sheet-up {
+  animation: sheetUp 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
 
-  @keyframes shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
-  }
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.04) 0%,
+    rgba(0, 0, 0, 0.08) 50%,
+    rgba(0, 0, 0, 0.04) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.dark .shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
+  background-size: 200% 100%;
 }

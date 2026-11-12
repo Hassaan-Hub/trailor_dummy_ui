@@ -5,24 +5,25 @@ interface AvatarProps {
   name: string
   color?: string
   size?: 'sm' | 'md' | 'lg'
-  className?: string
 }
 
-export function Avatar({ name, color = '#e6a02f', size = 'md', className }: AvatarProps) {
-  const sizes = {
-    sm: 'h-8 w-8 text-xs',
-    md: 'h-10 w-10 text-sm',
-    lg: 'h-12 w-12 text-base',
-  }
+const sizeMap = {
+  sm: 'w-8 h-8 text-xs',
+  md: 'w-10 h-10 text-sm',
+  lg: 'w-12 h-12 text-base',
+}
 
+export function Avatar({ name, color = '#f59e0b', size = 'md' }: AvatarProps) {
   return (
     <div
       className={cn(
-        'flex items-center justify-center rounded-full font-semibold text-white shrink-0',
-        sizes[size],
-        className
+        'flex items-center justify-center rounded-full font-bold shrink-0',
+        sizeMap[size],
       )}
-      style={{ backgroundColor: color }}
+      style={{
+        backgroundColor: `${color}20`,
+        color: color,
+      }}
     >
       {initials(name)}
     </div>

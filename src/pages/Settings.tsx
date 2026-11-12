@@ -1,261 +1,181 @@
 import { useState } from 'react'
-import {
-  Store,
-  User,
-  Ruler,
-  IndianRupee,
-  Save,
-  Upload,
-  Bell,
-  Moon,
-  Sun,
-  LogOut,
-} from 'lucide-react'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
+import { useNavigate } from 'react-router-dom'
+import { ArrowLeft, Store, Ruler, IndianRupee, Bell, Moon, Sun, Camera, Check } from 'lucide-react'
+import { Card } from '@/components/ui/Card'
 import { Input, Select } from '@/components/ui/Input'
+import { Button } from '@/components/ui/Button'
 import { useToast } from '@/components/ui/Toast'
 import { useTheme } from '@/context/ThemeContext'
 import { shopSettings } from '@/data/mockData'
 import { cn } from '@/lib/utils'
 
 export function Settings() {
+  const navigate = useNavigate()
   const { toast } = useToast()
-  const { theme, toggleTheme } = useTheme()
-  const [settings, setSettings] = useState(shopSettings)
-  const [notifSettings, setNotifSettings] = useState({
+  const { theme, setTheme } = useTheme()
+
+  const [shopName, setShopName] = useState(shopSettings.name)
+  const [ownerName, setOwnerName] = useState(shopSettings.ownerName)
+  const [phone, setPhone] = useState(shopSettings.phone)
+  const [address, setAddress] = useState(shopSettings.address)
+  const [unit, setUnit] = useState<'inches' | 'cm'>(shopSettings.measurementUnit)
+  const [taxRate, setTaxRate] = useState(String(shopSettings.taxRate))
+
+  const [toggles, setToggles] = useState({
     orderUpdates: true,
     trialReminders: true,
     lowStockAlerts: true,
-    deliveryReminders: false,
+    dailySummary: false,
   })
 
-  const handleSave = () => {
-    toast('Settings saved successfully!', 'success')
-  }
+  const toggle = (key: keyof typeof toggles) => setToggles((prev) => ({ ...prev, [key]: !prev[key] }))
 
   return (
-    <div className="space-y-6 animate-in max-w-4xl">
+    <div className="min-h-screen safe-top-px">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-navy-900 dark:text-white">Settings</h1>
-        <p className="text-sm text-navy-400 mt-1">Manage your shop details and preferences</p>
+      <div className="sticky top-0 z-30 bg-white dark:bg-navy-800 border-b border-gray-100 dark:border-navy-700/50 px-4 py-3 flex items-center gap-3">
+        <button onClick={() => navigate('/more')} className="w-9 h-9 rounded-full bg-gray-100 dark:bg-navy-700 flex items-center justify-center active:scale-90 transition-transform">
+          <ArrowLeft size={18} className="text-navy-700 dark:text-gray-300" />
+        </button>
+        <h1 className="text-base font-bold text-navy-900 dark:text-gray-100 flex-1">Settings</h1>
       </div>
 
-      {/* Shop Details */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Store size={18} className="text-gold-500" />
-            Shop Details
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-5">
-          {/* Logo */}
-          <div className="flex items-center gap-4">
-            <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-navy-800 text-white text-xl font-bold shrink-0">
-              {settings.logoText}
-            </div>
-            <div>
-              <Button variant="outline" size="sm">
-                <Upload size={14} /> Upload Logo
-              </Button>
-              <p className="text-xs text-navy-400 mt-1">PNG or JPG, max 2MB</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Input
-              label="Shop Name"
-              value={settings.shopName}
-              onChange={(e) => setSettings({ ...settings, shopName: e.target.value })}
-            />
-            <Input
-              label="Owner Name"
-              value={settings.ownerName}
-              onChange={(e) => setSettings({ ...settings, ownerName: e.target.value })}
-            />
-            <Input
-              label="Phone"
-              value={settings.phone}
-              onChange={(e) => setSettings({ ...settings, phone: e.target.value })}
-            />
-            <Input
-              label="Email"
-              value={settings.email}
-              onChange={(e) => setSettings({ ...settings, email: e.target.value })}
-            />
-            <Input
-              label="Address"
-              value={settings.address}
-              onChange={(e) => setSettings({ ...settings, address: e.target.value })}
-              className="sm:col-span-2"
-            />
-            <Input
-              label="City"
-              value={settings.city}
-              onChange={(e) => setSettings({ ...settings, city: e.target.value })}
-            />
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Measurement & Currency */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Ruler size={18} className="text-gold-500" />
-            Measurement & Currency
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <Select
-              label="Measurement Unit"
-              value={settings.measurementUnit}
-              onChange={(e) => setSettings({ ...settings, measurementUnit: e.target.value as 'inches' | 'cm' })}
-            >
-              <option value="inches">Inches (")</option>
-              <option value="cm">Centimeters (cm)</option>
-            </Select>
-            <Select
-              label="Currency"
-              value={settings.currency}
-              onChange={(e) => setSettings({ ...settings, currency: e.target.value })}
-            >
-              <option value="INR">Indian Rupee (₹)</option>
-              <option value="USD">US Dollar ($)</option>
-              <option value="EUR">Euro (€)</option>
-            </Select>
-            <div>
-              <label className="block text-sm font-medium text-navy-700 dark:text-navy-200 mb-1.5">
-                <IndianRupee size={14} className="inline mr-1" />
-                Tax Rate (%)
-              </label>
-              <input
-                type="number"
-                value={settings.taxRate}
-                onChange={(e) => setSettings({ ...settings, taxRate: parseFloat(e.target.value) || 0 })}
-                className="w-full rounded-lg border border-navy-200 dark:border-navy-700 bg-white dark:bg-navy-800 px-3 py-2 text-sm text-navy-900 dark:text-navy-100 focus:outline-none focus:ring-2 focus:ring-gold-400/50 transition-all"
-              />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Notifications */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Bell size={18} className="text-gold-500" />
-            Notification Preferences
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {[
-            { key: 'orderUpdates', label: 'Order status updates', desc: 'Get notified when order status changes' },
-            { key: 'trialReminders', label: 'Trial reminders', desc: 'Send automatic trial date reminders' },
-            { key: 'lowStockAlerts', label: 'Low stock alerts', desc: 'Alert when fabric stock is low' },
-            { key: 'deliveryReminders', label: 'Delivery reminders', desc: 'Send delivery date reminders to customers' },
-          ].map((item) => (
-            <div
-              key={item.key}
-              className="flex items-center justify-between py-2"
-            >
-              <div>
-                <p className="text-sm font-medium text-navy-800 dark:text-navy-100">{item.label}</p>
-                <p className="text-xs text-navy-400">{item.desc}</p>
-              </div>
-              <button
-                onClick={() =>
-                  setNotifSettings({
-                    ...notifSettings,
-                    [item.key]: !notifSettings[item.key as keyof typeof notifSettings],
-                  })
-                }
-                className={cn(
-                  'relative h-6 w-11 rounded-full transition-colors cursor-pointer',
-                  notifSettings[item.key as keyof typeof notifSettings]
-                    ? 'bg-gold-500'
-                    : 'bg-navy-200 dark:bg-navy-700'
-                )}
-              >
-                <span
-                  className={cn(
-                    'absolute top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform',
-                    notifSettings[item.key as keyof typeof notifSettings] ? 'translate-x-5' : 'translate-x-0.5'
-                  )}
-                />
-              </button>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
-
-      {/* Appearance */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            {theme === 'light' ? <Sun size={18} className="text-gold-500" /> : <Moon size={18} className="text-gold-500" />}
-            Appearance
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-navy-800 dark:text-navy-100">Dark Mode</p>
-              <p className="text-xs text-navy-400">Toggle between light and dark theme</p>
+      <div className="px-4 py-4 space-y-5">
+        {/* Shop logo */}
+        <Card className="p-4 flex items-center gap-3">
+          <div className="relative">
+            <div className="w-14 h-14 rounded-2xl bg-navy-900 dark:bg-navy-700 flex items-center justify-center">
+              <span className="font-display text-xl font-bold text-gold-400">S</span>
             </div>
             <button
-              onClick={toggleTheme}
-              className={cn(
-                'relative h-6 w-11 rounded-full transition-colors cursor-pointer',
-                theme === 'dark' ? 'bg-gold-500' : 'bg-navy-200 dark:bg-navy-700'
-              )}
+              onClick={() => toast('Logo upload (demo only)', 'info')}
+              className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-gold-500 flex items-center justify-center active:scale-90 transition-transform"
             >
-              <span
-                className={cn(
-                  'absolute top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform flex items-center justify-center',
-                  theme === 'dark' ? 'translate-x-5' : 'translate-x-0.5'
-                )}
-              >
-                {theme === 'dark' ? <Moon size={12} /> : <Sun size={12} />}
-              </span>
+              <Camera size={12} className="text-navy-900" />
             </button>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Profile */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <User size={18} className="text-gold-500" />
-            Profile
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center gap-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gold-500 text-white text-lg font-bold">
-              {settings.ownerName.split(' ').map((n) => n[0]).slice(0, 2).join('')}
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-semibold text-navy-800 dark:text-navy-100">{settings.ownerName}</p>
-              <p className="text-xs text-navy-400">{settings.email}</p>
-            </div>
-            <Button variant="danger" size="sm">
-              <LogOut size={14} /> Sign Out
-            </Button>
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-navy-900 dark:text-gray-100">Shop Logo</p>
+            <p className="text-[11px] text-gray-500 dark:text-gray-400">Tap the camera to change</p>
           </div>
-        </CardContent>
-      </Card>
+        </Card>
 
-      {/* Save Button */}
-      <div className="flex justify-end">
-        <Button variant="primary" size="lg" onClick={handleSave}>
-          <Save size={16} /> Save All Settings
+        {/* Shop details */}
+        <div>
+          <SectionTitle icon={Store} title="Shop Details" />
+          <Card className="p-4 space-y-3.5">
+            <Input label="Shop Name" value={shopName} onChange={(e) => setShopName(e.target.value)} />
+            <Input label="Owner Name" value={ownerName} onChange={(e) => setOwnerName(e.target.value)} />
+            <Input label="Phone" value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" />
+            <Input label="Address" value={address} onChange={(e) => setAddress(e.target.value)} />
+          </Card>
+        </div>
+
+        {/* Preferences */}
+        <div>
+          <SectionTitle icon={Ruler} title="Preferences" />
+          <Card className="p-4 space-y-3.5">
+            <Select label="Measurement Unit" value={unit} onChange={(e) => setUnit(e.target.value as 'inches' | 'cm')}>
+              <option value="inches">Inches (in)</option>
+              <option value="cm">Centimeters (cm)</option>
+            </Select>
+            <Select label="Currency" defaultValue="INR">
+              <option value="INR">₹ Indian Rupee (INR)</option>
+              <option value="USD">$ US Dollar (USD)</option>
+              <option value="AED">د.إ UAE Dirham (AED)</option>
+            </Select>
+            <Input label="Tax Rate (%)" type="number" value={taxRate} onChange={(e) => setTaxRate(e.target.value)} suffix="%" />
+          </Card>
+        </div>
+
+        {/* Appearance */}
+        <div>
+          <SectionTitle icon={theme === 'dark' ? Moon : Sun} title="Appearance" />
+          <Card className="overflow-hidden">
+            {(['light', 'dark'] as const).map((mode, i) => (
+              <button
+                key={mode}
+                onClick={() => setTheme(mode)}
+                className={cn(
+                  'w-full flex items-center gap-3 p-3.5 text-left active:bg-gray-50 dark:active:bg-navy-700/50 transition-colors',
+                  i === 0 && 'border-b border-gray-50 dark:border-navy-700/30',
+                )}
+              >
+                <div className="w-9 h-9 rounded-xl bg-gray-100 dark:bg-navy-700 flex items-center justify-center">
+                  {mode === 'light' ? <Sun size={17} className="text-gold-500" /> : <Moon size={17} className="text-navy-500 dark:text-gold-400" />}
+                </div>
+                <span className="flex-1 text-sm font-semibold text-navy-900 dark:text-gray-100 capitalize">{mode} Mode</span>
+                {theme === mode && (
+                  <div className="w-6 h-6 rounded-full bg-gold-500 flex items-center justify-center">
+                    <Check size={14} className="text-navy-900" strokeWidth={3} />
+                  </div>
+                )}
+              </button>
+            ))}
+          </Card>
+        </div>
+
+        {/* Notifications */}
+        <div>
+          <SectionTitle icon={Bell} title="Notifications" />
+          <Card className="overflow-hidden">
+            {([
+              { key: 'orderUpdates', label: 'Order Status Updates', desc: 'When an order changes status' },
+              { key: 'trialReminders', label: 'Trial Reminders', desc: 'Before scheduled fittings' },
+              { key: 'lowStockAlerts', label: 'Low Stock Alerts', desc: 'When fabric runs low' },
+              { key: 'dailySummary', label: 'Daily Summary', desc: 'End of day report' },
+            ] as const).map((item, i, arr) => (
+              <div
+                key={item.key}
+                className={cn(
+                  'flex items-center gap-3 p-3.5',
+                  i !== arr.length - 1 && 'border-b border-gray-50 dark:border-navy-700/30',
+                )}
+              >
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-navy-900 dark:text-gray-100">{item.label}</p>
+                  <p className="text-[11px] text-gray-500 dark:text-gray-400">{item.desc}</p>
+                </div>
+                <button
+                  onClick={() => toggle(item.key)}
+                  className={cn(
+                    'w-11 h-6 rounded-full p-0.5 transition-colors duration-200 shrink-0',
+                    toggles[item.key] ? 'bg-gold-500' : 'bg-gray-300 dark:bg-navy-600',
+                  )}
+                >
+                  <div className={cn(
+                    'w-5 h-5 rounded-full bg-white shadow transition-transform duration-200',
+                    toggles[item.key] ? 'translate-x-5' : 'translate-x-0',
+                  )} />
+                </button>
+              </div>
+            ))}
+          </Card>
+        </div>
+
+        {/* Tax info */}
+        <div className="flex items-center gap-3 p-3.5 rounded-xl bg-blue-50 dark:bg-blue-500/10">
+          <IndianRupee size={18} className="text-blue-500 shrink-0" />
+          <p className="text-[11px] text-blue-700 dark:text-blue-400">
+            Tax of {taxRate}% applies to all orders. All values are demo placeholders.
+          </p>
+        </div>
+
+        <Button fullWidth size="lg" variant="gold" onClick={() => toast('Settings saved successfully!', 'success')}>
+          <Check size={18} /> Save Settings
         </Button>
+
+        <p className="text-center text-[10px] text-gray-400 pb-4">StitchCraft v1.0.0 • Frontend Prototype</p>
       </div>
+    </div>
+  )
+}
+
+function SectionTitle({ icon: Icon, title }: { icon: typeof Store; title: string }) {
+  return (
+    <div className="flex items-center gap-1.5 mb-2 px-1">
+      <Icon size={13} className="text-gold-500" />
+      <p className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide">{title}</p>
     </div>
   )
 }

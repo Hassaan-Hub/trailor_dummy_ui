@@ -1,258 +1,207 @@
 import { useNavigate } from 'react-router-dom'
 import {
-  ShoppingCart,
-  Clock,
-  CheckCircle2,
-  IndianRupee,
+  ClipboardList,
+  Truck,
   Users,
+  IndianRupee,
   Plus,
   UserPlus,
-  ArrowRight,
-  TrendingUp,
-  Package,
+  Ruler,
+  ChevronRight,
+  Bell,
 } from 'lucide-react'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
-import { StatusBadge } from '@/components/ui/StatusBadge'
+import { Card } from '@/components/ui/Card'
 import { Avatar } from '@/components/ui/Avatar'
-import { EmptyState } from '@/components/ui/EmptyState'
-import {
-  dashboardStats,
-  orders,
-  customers,
-  ordersThisWeek,
-  popularGarments,
-} from '@/data/mockData'
-import { formatCurrency, formatDate, daysUntil, cn } from '@/lib/utils'
+import { StatusBadge } from '@/components/ui/StatusBadge'
+import { SkeletonStatCard, SkeletonCard } from '@/components/ui/Skeleton'
+import { orders, customers, shopSettings, messages } from '@/data/mockData'
+import { formatCurrency, formatShortDate, cn } from '@/lib/utils'
+import { useTheme } from '@/context/ThemeContext'
+import { useState, useEffect } from 'react'
 
 export function Dashboard() {
   const navigate = useNavigate()
-  const recentOrders = orders.slice(0, 6)
-  const maxBarHeight = Math.max(...ordersThisWeek.map((d) => d.count))
-  const maxGarmentCount = Math.max(...popularGarments.map((g) => g.count))
+  const { theme, toggleTheme } = useTheme()
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 600)
+    return () => clearTimeout(timer)
+  }, [])
+
+  const pendingOrders = orders.filter((o) => o.status === 'Pending' || o.status === 'In Progress').length
+  const todayDeliveries = orders.filter((o) => {
+    const today = new Date('2026-11-12').toDateString()
+    return new Date(o.deliveryDate).toDateString() === today && o.status !== 'Delivered' && o.status !== 'Cancelled'
+  }).length
+  const totalCustomers = customers.length
+  const monthlyRevenue = orders
+    .filter((o) => o.status === 'Delivered')
+    .reduce((sum, o) => sum + o.amount, 0)
+
+  const recentOrders = [...orders].sort((a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime()).slice(0, 5)
+  const unreadCount = messages.filter((m) => !m.read).length
 
   const stats = [
-    {
-      label: 'Total Orders',
-      value: dashboardStats.totalOrders,
-      icon: ShoppingCart,
-      color: 'bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400',
-      trend: '+12%',
-    },
-    {
-      label: 'Pending Orders',
-      value: dashboardStats.pendingOrders + dashboardStats.inProgressOrders,
-      icon: Clock,
-      color: 'bg-amber-50 text-amber-600 dark:bg-amber-950/40 dark:text-amber-400',
-      trend: '3 new',
-    },
-    {
-      label: 'Completed Orders',
-      value: dashboardStats.completedOrders,
-      icon: CheckCircle2,
-      color: 'bg-green-50 text-green-600 dark:bg-green-950/40 dark:text-green-400',
-      trend: '+5%',
-    },
-    {
-      label: 'Revenue (Nov)',
-      value: formatCurrency(dashboardStats.revenueThisMonth),
-      icon: IndianRupee,
-      color: 'bg-gold-50 text-gold-600 dark:bg-gold-950/40 dark:text-gold-400',
-      trend: '+18%',
-    },
-    {
-      label: 'Active Customers',
-      value: dashboardStats.activeCustomers,
-      icon: Users,
-      color: 'bg-purple-50 text-purple-600 dark:bg-purple-950/40 dark:text-purple-400',
-      trend: '+2',
-    },
+    { label: 'Pending', value: pendingOrders, icon: ClipboardList, color: 'text-amber-500', bg: 'bg-amber-100 dark:bg-amber-500/15' },
+    { label: 'Today', value: todayDeliveries, icon: Truck, color: 'text-blue-500', bg: 'bg-blue-100 dark:bg-blue-500/15' },
+    { label: 'Customers', value: totalCustomers, icon: Users, color: 'text-green-500', bg: 'bg-green-100 dark:bg-green-500/15' },
+    { label: 'Revenue', value: formatCurrency(monthlyRevenue), icon: IndianRupee, color: 'text-gold-500', bg: 'bg-gold-100 dark:bg-gold-500/15' },
   ]
 
-  return (
-    <div className="space-y-6 animate-in">
-      {/* Welcome */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-navy-900 dark:text-white">
-            Welcome back, Mubarak! 👋
-          </h1>
-          <p className="text-sm text-navy-400 mt-1">
-            Here's what's happening at your tailor shop today.
-          </p>
+  const quickActions = [
+    { label: 'New Order', icon: Plus, path: '/create-order', color: 'bg-navy-900 dark:bg-navy-700' },
+    { label: 'Add Customer', icon: UserPlus, path: '/customers', color: 'bg-gold-500' },
+    { label: 'Measurements', icon: Ruler, path: '/measurements', color: 'bg-purple-500' },
+    { label: 'Catalog', icon: ChevronRight, path: '/catalog', color: 'bg-blue-500' },
+  ]
+
+  if (loading) {
+    return (
+      <div className="px-4 pt-6 space-y-4">
+        <div className="h-24 rounded-2xl bg-navy-900 dark:bg-navy-800 shimmer" />
+        <div className="grid grid-cols-2 gap-3">
+          <SkeletonStatCard />
+          <SkeletonStatCard />
+          <SkeletonStatCard />
+          <SkeletonStatCard />
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="md" onClick={() => navigate('/customers')}>
-            <UserPlus size={16} />
-            New Customer
-          </Button>
-          <Button variant="primary" size="md" onClick={() => navigate('/orders/new')}>
-            <Plus size={16} />
-            New Order
-          </Button>
+        <div className="space-y-3">
+          <SkeletonCard />
+          <SkeletonCard />
+          <SkeletonCard />
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="px-4 pt-6 space-y-5 safe-top-px">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Good evening,</p>
+          <h1 className="text-xl font-bold text-navy-900 dark:text-gray-100">{shopSettings.ownerName}</h1>
+        </div>
+        <button
+          onClick={() => navigate('/notifications')}
+          className="relative w-10 h-10 rounded-full bg-gray-100 dark:bg-navy-700 flex items-center justify-center active:scale-90 transition-transform"
+        >
+          <Bell size={20} className="text-navy-600 dark:text-gray-300" />
+          {unreadCount > 0 && (
+            <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 rounded-full text-[9px] font-bold text-white flex items-center justify-center">
+              {unreadCount}
+            </span>
+          )}
+        </button>
+      </div>
+
+      {/* Shop banner */}
+      <div className="relative rounded-2xl bg-gradient-to-br from-navy-900 to-navy-700 dark:from-navy-800 dark:to-navy-600 p-4 overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-gold-500/10 rounded-full blur-2xl -mr-10 -mt-10" />
+        <div className="relative flex items-center justify-between">
+          <div>
+            <p className="text-gold-400 text-xs font-semibold uppercase tracking-wide">{shopSettings.name}</p>
+            <h2 className="text-white text-lg font-bold mt-0.5">Tailor Management</h2>
+            <p className="text-gray-400 text-xs mt-1">{orders.length} orders • {customers.length} customers</p>
+          </div>
+          <button
+            onClick={toggleTheme}
+            className="w-9 h-9 rounded-full bg-white/10 backdrop-blur flex items-center justify-center text-white text-sm active:scale-90 transition-transform"
+          >
+            {theme === 'dark' ? '☀' : '☾'}
+          </button>
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+      {/* Stats grid */}
+      <div className="grid grid-cols-2 gap-3">
         {stats.map((stat) => (
-          <Card key={stat.label} className="p-4 hover:shadow-md transition-shadow">
-            <div className="flex items-start justify-between mb-3">
-              <div className={cn('p-2 rounded-lg', stat.color)}>
-                <stat.icon size={18} />
+          <Card key={stat.label} className="p-4">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">{stat.label}</p>
+                <p className="text-xl font-bold text-navy-900 dark:text-gray-100 mt-1">{stat.value}</p>
               </div>
-              <span className="text-xs font-medium text-green-600 flex items-center gap-0.5">
-                <TrendingUp size={12} />
-                {stat.trend}
-              </span>
+              <div className={cn('w-9 h-9 rounded-xl flex items-center justify-center', stat.bg)}>
+                <stat.icon size={18} className={stat.color} />
+              </div>
             </div>
-            <p className="text-2xl font-bold text-navy-900 dark:text-white">{stat.value}</p>
-            <p className="text-xs text-navy-400 mt-1">{stat.label}</p>
           </Card>
         ))}
       </div>
 
-      {/* Charts row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Orders This Week */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Orders This Week</CardTitle>
-            <span className="text-xs text-navy-400">Last 7 days</span>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-end justify-between gap-3 h-48 pt-4">
-              {ordersThisWeek.map((day) => (
-                <div key={day.day} className="flex flex-col items-center gap-2 flex-1">
-                  <span className="text-xs font-semibold text-navy-600 dark:text-navy-300">
-                    {day.count}
-                  </span>
-                  <div className="w-full flex-1 flex items-end">
-                    <div
-                      className="w-full rounded-t-lg bg-gradient-to-t from-navy-700 to-gold-400 transition-all hover:from-navy-600 hover:to-gold-300"
-                      style={{ height: `${(day.count / maxBarHeight) * 100}%`, minHeight: '8px' }}
-                    />
-                  </div>
-                  <span className="text-xs text-navy-400">{day.day}</span>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Popular Garments */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Popular Garments</CardTitle>
-            <Package size={16} className="text-navy-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3 pt-2">
-              {popularGarments.slice(0, 5).map((g) => (
-                <div key={g.name}>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-navy-700 dark:text-navy-200">{g.name}</span>
-                    <span className="text-xs font-semibold text-navy-500">{g.count}</span>
-                  </div>
-                  <div className="h-2 rounded-full bg-navy-100 dark:bg-navy-800 overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all"
-                      style={{
-                        width: `${(g.count / maxGarmentCount) * 100}%`,
-                        backgroundColor: g.color,
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+      {/* Quick actions */}
+      <div>
+        <h3 className="text-sm font-bold text-navy-900 dark:text-gray-100 mb-3">Quick Actions</h3>
+        <div className="grid grid-cols-4 gap-2">
+          {quickActions.map((action) => (
+            <button
+              key={action.label}
+              onClick={() => navigate(action.path)}
+              className="flex flex-col items-center gap-1.5"
+            >
+              <div className={cn(
+                'w-12 h-12 rounded-2xl flex items-center justify-center shadow-sm active:scale-90 transition-transform',
+                action.color,
+              )}>
+                <action.icon size={20} className="text-white" />
+              </div>
+              <span className="text-[10px] font-medium text-gray-600 dark:text-gray-400 text-center leading-tight">
+                {action.label}
+              </span>
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* Recent Orders */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Orders</CardTitle>
+      {/* Recent orders */}
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-sm font-bold text-navy-900 dark:text-gray-100">Recent Orders</h3>
           <button
             onClick={() => navigate('/orders')}
-            className="text-sm text-gold-600 dark:text-gold-400 font-medium hover:underline flex items-center gap-1 cursor-pointer"
+            className="text-xs font-semibold text-gold-600 dark:text-gold-400 flex items-center gap-0.5"
           >
-            View all <ArrowRight size={14} />
+            View All <ChevronRight size={14} />
           </button>
-        </CardHeader>
-        <CardContent className="p-0">
-          {recentOrders.length === 0 ? (
-            <EmptyState
-              icon={<ShoppingCart size={28} />}
-              title="No orders yet"
-              description="Create your first order to get started."
-              action={<Button onClick={() => navigate('/orders/new')}><Plus size={16} /> New Order</Button>}
-            />
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-navy-100 dark:border-navy-800 text-left">
-                    <th className="px-5 py-3 font-medium text-navy-500 text-xs uppercase tracking-wider">Order ID</th>
-                    <th className="px-5 py-3 font-medium text-navy-500 text-xs uppercase tracking-wider">Customer</th>
-                    <th className="px-5 py-3 font-medium text-navy-500 text-xs uppercase tracking-wider hidden md:table-cell">Garment</th>
-                    <th className="px-5 py-3 font-medium text-navy-500 text-xs uppercase tracking-wider hidden lg:table-cell">Delivery</th>
-                    <th className="px-5 py-3 font-medium text-navy-500 text-xs uppercase tracking-wider">Status</th>
-                    <th className="px-5 py-3 font-medium text-navy-500 text-xs uppercase tracking-wider text-right">Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {recentOrders.map((order) => {
-                    const daysLeft = daysUntil(order.deliveryDate)
-                    return (
-                      <tr
-                        key={order.id}
-                        className="border-b border-navy-50 dark:border-navy-800/50 hover:bg-navy-50 dark:hover:bg-navy-800/30 transition-colors cursor-pointer"
-                        onClick={() => navigate('/orders')}
-                      >
-                        <td className="px-5 py-3 font-medium text-navy-800 dark:text-navy-100">
-                          {order.id}
-                        </td>
-                        <td className="px-5 py-3">
-                          <div className="flex items-center gap-2">
-                            <Avatar
-                              name={order.customerName}
-                              color={customers.find((c) => c.id === order.customerId)?.avatarColor}
-                              size="sm"
-                            />
-                            <span className="text-navy-800 dark:text-navy-100 truncate">
-                              {order.customerName}
-                            </span>
-                          </div>
-                        </td>
-                        <td className="px-5 py-3 hidden md:table-cell text-navy-600 dark:text-navy-300">
-                          {order.items[0].garmentType}
-                          {order.items.length > 1 && ` +${order.items.length - 1}`}
-                        </td>
-                        <td className="px-5 py-3 hidden lg:table-cell">
-                          <span className="text-navy-600 dark:text-navy-300">{formatDate(order.deliveryDate)}</span>
-                          {daysLeft > 0 && daysLeft <= 7 && order.status !== 'Delivered' && order.status !== 'Cancelled' && (
-                            <span className="block text-xs text-amber-600 dark:text-amber-400">
-                              {daysLeft} days left
-                            </span>
-                          )}
-                        </td>
-                        <td className="px-5 py-3">
-                          <StatusBadge status={order.status} />
-                        </td>
-                        <td className="px-5 py-3 text-right font-semibold text-navy-800 dark:text-navy-100">
-                          {formatCurrency(order.totalAmount)}
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+        </div>
+
+        {/* Horizontal scroll list */}
+        <div className="flex gap-3 overflow-x-auto no-scrollbar -mx-4 px-4 pb-2">
+          {recentOrders.map((order) => {
+            const customer = customers.find((c) => c.id === order.customerId)
+            return (
+              <button
+                key={order.id}
+                onClick={() => navigate('/orders')}
+                className="shrink-0 w-64 text-left active:scale-[0.98] transition-transform"
+              >
+                <Card className="p-3.5 h-full">
+                  <div className="flex items-center gap-2.5 mb-2.5">
+                    <Avatar name={order.customerName} color={customer?.avatarColor} size="sm" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-navy-900 dark:text-gray-100 truncate">{order.customerName}</p>
+                      <p className="text-[11px] text-gray-500 dark:text-gray-400">{order.id}</p>
+                    </div>
+                    <StatusBadge status={order.status} size="sm" />
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <div>
+                      <p className="text-gray-500 dark:text-gray-400">{order.garmentType}</p>
+                      <p className="font-semibold text-navy-700 dark:text-gray-300 mt-0.5">{formatCurrency(order.amount)}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-gray-500 dark:text-gray-400">Delivery</p>
+                      <p className="font-medium text-navy-700 dark:text-gray-300 mt-0.5">{formatShortDate(order.deliveryDate)}</p>
+                    </div>
+                  </div>
+                </Card>
+              </button>
+            )
+          })}
+        </div>
+      </div>
     </div>
   )
 }

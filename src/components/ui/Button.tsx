@@ -1,45 +1,45 @@
 import { cn } from '@/lib/utils'
-import type { ButtonHTMLAttributes, ReactNode } from 'react'
+import type { ButtonHTMLAttributes } from 'react'
+
+type Variant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'gold'
+type Size = 'sm' | 'md' | 'lg'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger'
-  size?: 'sm' | 'md' | 'lg'
-  children: ReactNode
+  variant?: Variant
+  size?: Size
+  fullWidth?: boolean
+}
+
+const variantStyles: Record<Variant, string> = {
+  primary: 'bg-navy-900 text-white active:bg-navy-800 dark:bg-navy-700 dark:active:bg-navy-600',
+  secondary: 'bg-gray-100 text-navy-800 active:bg-gray-200 dark:bg-navy-700/50 dark:text-gray-200 dark:active:bg-navy-700',
+  ghost: 'bg-transparent text-navy-600 active:bg-gray-100 dark:text-gray-300 dark:active:bg-navy-700/50',
+  danger: 'bg-red-500 text-white active:bg-red-600',
+  gold: 'bg-gold-500 text-navy-900 active:bg-gold-600 font-bold',
+}
+
+const sizeStyles: Record<Size, string> = {
+  sm: 'px-3 py-2 text-sm rounded-lg',
+  md: 'px-4 py-3 text-sm rounded-xl',
+  lg: 'px-5 py-3.5 text-base rounded-xl',
 }
 
 export function Button({
   variant = 'primary',
   size = 'md',
+  fullWidth,
   className,
   children,
   ...props
 }: ButtonProps) {
-  const variants = {
-    primary:
-      'bg-gold-500 hover:bg-gold-600 text-white shadow-sm hover:shadow-md transition-all',
-    secondary:
-      'bg-navy-800 hover:bg-navy-700 text-white shadow-sm hover:shadow-md transition-all dark:bg-navy-700 dark:hover:bg-navy-600',
-    outline:
-      'border border-navy-200 dark:border-navy-700 text-navy-700 dark:text-navy-200 hover:bg-navy-50 dark:hover:bg-navy-800/50 transition-colors',
-    ghost:
-      'text-navy-600 dark:text-navy-300 hover:bg-navy-50 dark:hover:bg-navy-800/50 transition-colors',
-    danger:
-      'bg-red-500 hover:bg-red-600 text-white shadow-sm transition-colors',
-  }
-
-  const sizes = {
-    sm: 'px-3 py-1.5 text-sm rounded-lg',
-    md: 'px-4 py-2 text-sm rounded-lg',
-    lg: 'px-6 py-3 text-base rounded-xl',
-  }
-
   return (
     <button
       className={cn(
-        'inline-flex items-center justify-center gap-2 font-medium disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer',
-        variants[variant],
-        sizes[size],
-        className
+        'inline-flex items-center justify-center gap-2 font-semibold transition-all duration-150 active:scale-[0.97] select-none',
+        variantStyles[variant],
+        sizeStyles[size],
+        fullWidth && 'w-full',
+        className,
       )}
       {...props}
     >

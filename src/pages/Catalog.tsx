@@ -1,193 +1,149 @@
-import { useState } from 'react'
-import { Shirt, Search, Eye } from 'lucide-react'
-import { Card, CardContent } from '@/components/ui/Card'
+import { useState, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { ArrowLeft, Search, Shirt, IndianRupee, ChevronRight } from 'lucide-react'
+import { Card } from '@/components/ui/Card'
+import { BottomSheet } from '@/components/ui/BottomSheet'
 import { Button } from '@/components/ui/Button'
-import { Modal } from '@/components/ui/Modal'
+import { EmptyState } from '@/components/ui/EmptyState'
+import { useToast } from '@/components/ui/Toast'
 import { garmentStyles } from '@/data/mockData'
-import { formatCurrency } from '@/lib/utils'
+import { formatCurrency, cn } from '@/lib/utils'
 import type { GarmentStyle } from '@/types'
 
 export function Catalog() {
+  const navigate = useNavigate()
+  const { toast } = useToast()
   const [search, setSearch] = useState('')
   const [selectedStyle, setSelectedStyle] = useState<GarmentStyle | null>(null)
 
-  const filteredStyles = garmentStyles.filter(
-    (s) =>
-      s.type.toLowerCase().includes(search.toLowerCase()) ||
-      s.name.toLowerCase().includes(search.toLowerCase())
-  )
+  const filtered = useMemo(() => {
+    if (!search.trim()) return garmentStyles
+    const q = search.toLowerCase()
+    return garmentStyles.filter(
+      (g) => g.type.toLowerCase().includes(q) || g.name.toLowerCase().includes(q) || g.description.toLowerCase().includes(q),
+    )
+  }, [search])
+
+  const categoryLabel: Record<string, string> = {
+    collars: 'Collar / Lapel', cuffs: 'Cuff Styles', pockets: 'Pocket Styles',
+    closures: 'Closures', necklines: 'Necklines',
+  }
 
   return (
-    <div className="space-y-6 animate-in">
+    <div className="min-h-screen safe-top-px">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-navy-900 dark:text-white">Garment Catalog</h1>
-        <p className="text-sm text-navy-400 mt-1">Browse garment types, styles, and pricing</p>
+      <div className="sticky top-0 z-30 bg-white dark:bg-navy-800 border-b border-gray-100 dark:border-navy-700/50 px-4 py-3 flex items-center gap-3">
+        <button onClick={() => navigate('/more')} className="w-9 h-9 rounded-full bg-gray-100 dark:bg-navy-700 flex items-center justify-center active:scale-90 transition-transform">
+          <ArrowLeft size={18} className="text-navy-700 dark:text-gray-300" />
+        </button>
+        <h1 className="text-base font-bold text-navy-900 dark:text-gray-100 flex-1">Garment Catalog</h1>
       </div>
 
-      {/* Search */}
-      <div className="relative max-w-md">
-        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-navy-400" />
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search garments..."
-          className="w-full pl-9 pr-4 py-2 text-sm rounded-lg border border-navy-200 dark:border-navy-700 bg-white dark:bg-navy-800 text-navy-900 dark:text-navy-100 placeholder:text-navy-400 focus:outline-none focus:ring-2 focus:ring-gold-400/50 transition-all"
-        />
+      <div className="px-4 py-4 space-y-4">
+        {/* Intro */}
+        <div className="rounded-2xl bg-gradient-to-br from-navy-900 to-navy-700 dark:from-navy-800 dark:to-navy-600 p-4">
+          <p className="text-gold-400 text-xs font-semibold uppercase tracking-wide">Style Library</p>
+          <h2 className="text-white text-lg font-bold mt-0.5">{garmentStyles.length} Garment Types</h2>
+          <p className="text-gray-400 text-xs mt-1">Tap any garment to explore style variations</p>
+        </div>
+
+        {/* Search */}
+        <div className="relative">
+          <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search garments..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full rounded-xl bg-white dark:bg-navy-800 border border-gray-100 dark:border-navy-700/50 pl-11 pr-4 py-3 text-sm text-navy-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gold-400/50"
+          />
+        </div>
+
+        {/* Grid */}
+        {filtered.length === 0 ? (
+          <EmptyState icon={Shirt} title="No garments found" description="Try a different search term" />
+        ) : (
+          <div className="grid grid-cols-2 gap-3">
+            {filtered.map((g, i) => (
+              <button
+                key={g.id}
+                onClick={() => setSelectedStyle(g)}
+                className="text-left animate-slide-up active:scale-[0.97] transition-transform"
+                style={{ animationDelay: `${i * 35}ms` }}
+              >
+                <Card className="h-full overflow-hidden">
+                  {/* Illustration placeholder */}
+                  <div className="h-24 bg-gradient-to-br from-navy-100 to-gold-100 dark:from-navy-700 dark:to-navy-600 flex items-center justify-center relative">
+                    <Shirt size={36} className="text-navy-400 dark:text-gold-400/60" strokeWidth={1.2} />
+                    <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-white/70 dark:bg-navy-800/70 flex items-center justify-center">
+                      <ChevronRight size={13} className="text-navy-500" />
+                    </div>
+                  </div>
+                  <div className="p-3">
+                    <p className="text-sm font-bold text-navy-900 dark:text-gray-100">{g.type}</p>
+                    <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-2">{g.description}</p>
+                    <p className="text-[11px] font-bold text-gold-600 dark:text-gold-400 mt-1.5 flex items-center gap-0.5">
+                      <IndianRupee size={11} /> from {formatCurrency(g.basePrice)}
+                    </p>
+                  </div>
+                </Card>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {filteredStyles.map((style) => (
-          <Card
-            key={style.id}
-            className="overflow-hidden hover:shadow-lg transition-all cursor-pointer group"
-            onClick={() => setSelectedStyle(style)}
-          >
-            {/* Image placeholder */}
-            <div
-              className="h-40 flex items-center justify-center relative overflow-hidden"
-              style={{ backgroundColor: style.imageColor }}
-            >
-              <Shirt size={56} className="text-white/80 group-hover:scale-110 transition-transform" />
-              <div className="absolute top-2 right-2 bg-white/20 backdrop-blur-sm rounded-lg px-2 py-1">
-                <span className="text-xs text-white font-medium">{style.priceRange}</span>
-              </div>
-            </div>
-
-            <CardContent className="p-4">
-              <h3 className="text-base font-semibold text-navy-900 dark:text-white">{style.type}</h3>
-              <p className="text-xs text-navy-400 mt-0.5">{style.name}</p>
-              <p className="text-sm text-navy-500 dark:text-navy-300 mt-2 line-clamp-2">
-                {style.description}
-              </p>
-
-              <div className="flex items-center justify-between mt-3 pt-3 border-t border-navy-100 dark:border-navy-800">
-                <div>
-                  <p className="text-xs text-navy-400">Base Price</p>
-                  <p className="text-sm font-semibold text-gold-600 dark:text-gold-400">
-                    {formatCurrency(style.basePrice)}
-                  </p>
-                </div>
-                <Button variant="ghost" size="sm">
-                  <Eye size={14} /> Details
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* Detail Modal */}
-      <Modal
-        isOpen={!!selectedStyle}
-        onClose={() => setSelectedStyle(null)}
-        title={selectedStyle?.name}
-        size="lg"
-      >
+      {/* Style detail sheet */}
+      <BottomSheet open={!!selectedStyle} onClose={() => setSelectedStyle(null)} title={selectedStyle?.type}>
         {selectedStyle && (
-          <div className="p-6 space-y-6">
-            {/* Hero */}
-            <div
-              className="h-48 rounded-xl flex items-center justify-center"
-              style={{ backgroundColor: selectedStyle.imageColor }}
-            >
-              <Shirt size={72} className="text-white/80" />
+          <div className="space-y-4">
+            <div className="rounded-xl bg-gradient-to-br from-navy-100 to-gold-100 dark:from-navy-700 dark:to-navy-600 h-28 flex items-center justify-center">
+              <Shirt size={44} className="text-navy-400 dark:text-gold-400/60" strokeWidth={1.2} />
             </div>
 
             <div>
-              <h3 className="text-lg font-semibold text-navy-900 dark:text-white">{selectedStyle.type}</h3>
-              <p className="text-sm text-navy-500 dark:text-navy-300 mt-1">{selectedStyle.description}</p>
+              <h3 className="text-base font-bold text-navy-900 dark:text-gray-100">{selectedStyle.name}</h3>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{selectedStyle.description}</p>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-navy-50 dark:bg-navy-800/50 rounded-lg p-4">
-                <p className="text-xs text-navy-400 mb-1">Base Price</p>
-                <p className="text-xl font-bold text-gold-600 dark:text-gold-400">
-                  {formatCurrency(selectedStyle.basePrice)}
-                </p>
-                <p className="text-xs text-navy-400 mt-1">{selectedStyle.priceRange}</p>
-              </div>
-              <div className="bg-navy-50 dark:bg-navy-800/50 rounded-lg p-4">
-                <p className="text-xs text-navy-400 mb-1">Price Range</p>
-                <p className="text-sm font-medium text-navy-800 dark:text-navy-100">
-                  {selectedStyle.priceRange}
-                </p>
-              </div>
+            <div className="flex items-center justify-between p-3 rounded-xl bg-gold-50 dark:bg-gold-500/10">
+              <span className="text-sm text-navy-700 dark:text-gray-300">Base Price</span>
+              <span className="text-lg font-bold text-gold-600 dark:text-gold-400">{formatCurrency(selectedStyle.basePrice)}</span>
             </div>
 
-            {/* Style Options */}
-            {selectedStyle.styleOptions && (
-              <div className="space-y-4">
-                <h4 className="text-sm font-semibold text-navy-700 dark:text-navy-200">Available Style Options</h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {selectedStyle.styleOptions.collars && (
-                    <div>
-                      <p className="text-xs font-medium text-navy-500 mb-2">Collar Types</p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {selectedStyle.styleOptions.collars.map((c) => (
-                          <span key={c} className="text-xs px-2 py-1 rounded-md bg-navy-100 dark:bg-navy-800 text-navy-600 dark:text-navy-300">
-                            {c}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  {selectedStyle.styleOptions.cuffs && (
-                    <div>
-                      <p className="text-xs font-medium text-navy-500 mb-2">Cuff Types</p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {selectedStyle.styleOptions.cuffs.map((c) => (
-                          <span key={c} className="text-xs px-2 py-1 rounded-md bg-navy-100 dark:bg-navy-800 text-navy-600 dark:text-navy-300">
-                            {c}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  {selectedStyle.styleOptions.pockets && (
-                    <div>
-                      <p className="text-xs font-medium text-navy-500 mb-2">Pocket Styles</p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {selectedStyle.styleOptions.pockets.map((c) => (
-                          <span key={c} className="text-xs px-2 py-1 rounded-md bg-navy-100 dark:bg-navy-800 text-navy-600 dark:text-navy-300">
-                            {c}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  {selectedStyle.styleOptions.closures && (
-                    <div>
-                      <p className="text-xs font-medium text-navy-500 mb-2">Closure Types</p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {selectedStyle.styleOptions.closures.map((c) => (
-                          <span key={c} className="text-xs px-2 py-1 rounded-md bg-navy-100 dark:bg-navy-800 text-navy-600 dark:text-navy-300">
-                            {c}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  {selectedStyle.styleOptions.necklines && (
-                    <div>
-                      <p className="text-xs font-medium text-navy-500 mb-2">Neckline Options</p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {selectedStyle.styleOptions.necklines.map((c) => (
-                          <span key={c} className="text-xs px-2 py-1 rounded-md bg-navy-100 dark:bg-navy-800 text-navy-600 dark:text-navy-300">
-                            {c}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+            {Object.entries(selectedStyle.styleOptions).map(([category, options]) => options && options.length > 0 ? (
+              <div key={category}>
+                <p className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
+                  {categoryLabel[category] || category}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {options.map((opt) => (
+                    <span key={opt} className={cn(
+                      'px-3 py-1.5 rounded-lg text-xs font-medium',
+                      'bg-gray-100 dark:bg-navy-700 text-navy-700 dark:text-gray-300',
+                    )}>
+                      {opt}
+                    </span>
+                  ))}
                 </div>
               </div>
-            )}
+            ) : null)}
+
+            <Button
+              fullWidth
+              size="lg"
+              variant="gold"
+              onClick={() => {
+                setSelectedStyle(null)
+                navigate('/create-order')
+                toast(`Creating new ${selectedStyle.type} order`, 'info')
+              }}
+            >
+              Create Order with This Style
+            </Button>
           </div>
         )}
-      </Modal>
+      </BottomSheet>
     </div>
   )
 }
