@@ -10,43 +10,66 @@ import type {
 
 export const shopSettings: ShopSettings = {
   name: 'StitchCraft Tailors',
-  ownerName: 'Rajesh Sharma',
-  phone: '+91 98765 43210',
-  address: 'Shop No. 12, Fashion Street, Mumbai',
+  ownerName: 'Mubarak Bugti',
+  phone: '+92 300 1234567',
+  address: 'Shop No. 12, Tariq Road, Karachi',
   measurementUnit: 'inches',
-  currency: '₹',
+  currency: 'Rs.',
   taxRate: 5,
 }
 
 export const customers: Customer[] = [
-  { id: 'C001', name: 'Arjun Mehta', phone: '+91 98200 11234', email: 'arjun.mehta@email.com', address: '12 Marine Drive', city: 'Mumbai', joinedDate: '2024-03-15', totalOrders: 8, totalSpent: 24500, avatarColor: '#f59e0b' },
-  { id: 'C002', name: 'Priya Sharma', phone: '+91 98201 22345', email: 'priya.sharma@email.com', address: '45 Bandra West', city: 'Mumbai', joinedDate: '2024-06-22', totalOrders: 12, totalSpent: 38200, avatarColor: '#ec4899' },
-  { id: 'C003', name: 'Rohan Kapoor', phone: '+91 98202 33456', email: 'rohan.kapoor@email.com', address: '78 Andheri East', city: 'Mumbai', joinedDate: '2024-01-10', totalOrders: 5, totalSpent: 18900, avatarColor: '#3b82f6' },
-  { id: 'C004', name: 'Ananya Reddy', phone: '+91 98203 44567', email: 'ananya.reddy@email.com', address: '23 Juhu Scheme', city: 'Mumbai', joinedDate: '2024-08-05', totalOrders: 15, totalSpent: 52600, avatarColor: '#8b5cf6' },
-  { id: 'C005', name: 'Vikram Singh', phone: '+91 98204 55678', email: 'vikram.singh@email.com', address: '56 Powai', city: 'Mumbai', joinedDate: '2024-04-18', totalOrders: 3, totalSpent: 9800, avatarColor: '#10b981' },
-  { id: 'C006', name: 'Sneha Patel', phone: '+91 98205 66789', email: 'sneha.patel@email.com', address: '89 Dadar West', city: 'Mumbai', joinedDate: '2024-07-30', totalOrders: 7, totalSpent: 21300, avatarColor: '#f97316' },
-  { id: 'C007', name: 'Karan Malhotra', phone: '+91 98206 77890', email: 'karan.malhotra@email.com', address: '34 Worli Sea Face', city: 'Mumbai', joinedDate: '2024-02-14', totalOrders: 9, totalSpent: 31400, avatarColor: '#06b6d4' },
-  { id: 'C008', name: 'Divya Nair', phone: '+91 98207 88901', email: 'divya.nair@email.com', address: '67 Goregaon West', city: 'Mumbai', joinedDate: '2024-09-12', totalOrders: 4, totalSpent: 15600, avatarColor: '#ef4444' },
-  { id: 'C009', name: 'Aditya Joshi', phone: '+91 98208 99012', email: 'aditya.joshi@email.com', address: '90 Malad West', city: 'Mumbai', joinedDate: '2024-05-20', totalOrders: 6, totalSpent: 19700, avatarColor: '#84cc16' },
-  { id: 'C010', name: 'Ishita Gupta', phone: '+91 98209 10123', email: 'ishita.gupta@email.com', address: '11 Colaba Causeway', city: 'Mumbai', joinedDate: '2024-10-01', totalOrders: 2, totalSpent: 7800, avatarColor: '#a855f7' },
+  { id: 'C001', name: 'Sajjad Chana', phone: '+92 300 1112233', email: 'sajjad.chana@email.com', address: '12 Clifton Block 2', city: 'Karachi', joinedDate: '2024-03-15', totalOrders: 8, totalSpent: 24500, avatarColor: '#f59e0b' },
+
+  { id: 'C002', name: 'Kanzal', phone: '+92 301 2223344', email: 'kanzal@email.com', address: '45 Gulberg', city: 'Lahore', joinedDate: '2024-06-22', totalOrders: 12, totalSpent: 38200, avatarColor: '#ec4899' },
+
+  { id: 'C003', name: 'Muhammad Hamza', phone: '+92 302 3334455', email: 'hamza@email.com', address: '78 Latifabad', city: 'Hyderabad', joinedDate: '2024-01-10', totalOrders: 5, totalSpent: 18900, avatarColor: '#3b82f6' },
+
+  { id: 'C004', name: 'Noman', phone: '+92 303 4445566', email: 'noman@email.com', address: '23 DHA Phase 5', city: 'Karachi', joinedDate: '2024-08-05', totalOrders: 15, totalSpent: 52600, avatarColor: '#8b5cf6' },
+
+  { id: 'C005', name: 'Abdul Rehman', phone: '+92 304 5556677', email: 'abdul.rehman@email.com', address: '56 Satellite Town', city: 'Quetta', joinedDate: '2024-04-18', totalOrders: 3, totalSpent: 9800, avatarColor: '#10b981' },
+
+  { id: 'C006', name: 'Ayesha Fatima', phone: '+92 305 6667788', email: 'ayesha.fatima@email.com', address: '89 Saddar', city: 'Rawalpindi', joinedDate: '2024-07-30', totalOrders: 7, totalSpent: 21300, avatarColor: '#f97316' },
+
+  { id: 'C007', name: 'Muhammad Usman', phone: '+92 306 7778899', email: 'usman@email.com', address: '34 DHA Phase 6', city: 'Lahore', joinedDate: '2024-02-14', totalOrders: 9, totalSpent: 31400, avatarColor: '#06b6d4' },
+
+  { id: 'C008', name: 'Maryam Noor', phone: '+92 307 8889900', email: 'maryam.noor@email.com', address: '67 Gulshan-e-Iqbal', city: 'Karachi', joinedDate: '2024-09-12', totalOrders: 4, totalSpent: 15600, avatarColor: '#ef4444' },
+
+  { id: 'C009', name: 'Ahmed Raza', phone: '+92 308 9990011', email: 'ahmed.raza@email.com', address: '90 Model Town', city: 'Lahore', joinedDate: '2024-05-20', totalOrders: 6, totalSpent: 19700, avatarColor: '#84cc16' },
+
+  { id: 'C010', name: 'Hira Malik', phone: '+92 309 1001122', email: 'hira.malik@email.com', address: '11 F-10 Markaz', city: 'Islamabad', joinedDate: '2024-10-12', totalOrders: 2, totalSpent: 7800, avatarColor: '#a855f7' },
 ]
 
 export const orders: Order[] = [
-  { id: 'ORD-001', customerId: 'C001', customerName: 'Arjun Mehta', garmentType: 'Sherwani', status: 'In Progress', priority: 'High', orderDate: '2026-11-01', deliveryDate: '2026-11-20', amount: 4500, fabricName: 'Cream Silk Brocade', measurementId: 'M001', notes: 'Wedding sherwani - need gold embroidery' },
-  { id: 'ORD-002', customerId: 'C002', customerName: 'Priya Sharma', garmentType: 'Lehenga', status: 'Ready for Trial', priority: 'Urgent', orderDate: '2026-10-25', deliveryDate: '2026-11-15', amount: 8200, fabricName: 'Red Velvet', measurementId: 'M002', notes: 'Reception lehenga with heavy work' },
-  { id: 'ORD-003', customerId: 'C003', customerName: 'Rohan Kapoor', garmentType: 'Suit', status: 'Pending', priority: 'Normal', orderDate: '2026-11-08', deliveryDate: '2026-11-25', amount: 3200, fabricName: 'Navy Wool Blend', measurementId: 'M003' },
-  { id: 'ORD-004', customerId: 'C004', customerName: 'Ananya Reddy', garmentType: 'Salwar Suit', status: 'Delivered', priority: 'Normal', orderDate: '2026-10-10', deliveryDate: '2026-10-28', amount: 2400, fabricName: 'Cotton Printed', measurementId: 'M004' },
-  { id: 'ORD-005', customerId: 'C005', customerName: 'Vikram Singh', garmentType: 'Pathani', status: 'Ready for Delivery', priority: 'Normal', orderDate: '2026-10-28', deliveryDate: '2026-11-12', amount: 1800, fabricName: 'Olive Cotton', measurementId: 'M005' },
-  { id: 'ORD-006', customerId: 'C006', customerName: 'Sneha Patel', garmentType: 'Kurta', status: 'In Progress', priority: 'Normal', orderDate: '2026-11-05', deliveryDate: '2026-11-18', amount: 1200, fabricName: 'White Linen', measurementId: 'M006' },
-  { id: 'ORD-007', customerId: 'C007', customerName: 'Karan Malhotra', garmentType: 'Blazer', status: 'Ready for Trial', priority: 'High', orderDate: '2026-10-30', deliveryDate: '2026-11-14', amount: 3800, fabricName: 'Charcoal Tweed', measurementId: 'M007' },
-  { id: 'ORD-008', customerId: 'C008', customerName: 'Divya Nair', garmentType: 'Designer Gown', status: 'Pending', priority: 'Urgent', orderDate: '2026-11-10', deliveryDate: '2026-11-22', amount: 6500, fabricName: 'Teal Chiffon', measurementId: 'M008', notes: 'Party wear gown' },
-  { id: 'ORD-009', customerId: 'C009', customerName: 'Aditya Joshi', garmentType: 'Formal Shirt', status: 'Delivered', priority: 'Low', orderDate: '2026-10-15', deliveryDate: '2026-10-30', amount: 900, fabricName: 'Blue Cotton', measurementId: 'M001' },
-  { id: 'ORD-010', customerId: 'C010', customerName: 'Ishita Gupta', garmentType: 'Salwar Suit', status: 'In Progress', priority: 'Normal', orderDate: '2026-11-06', deliveryDate: '2026-11-19', amount: 2600, fabricName: 'Pink Georgette', measurementId: 'M002' },
-  { id: 'ORD-011', customerId: 'C001', customerName: 'Arjun Mehta', garmentType: 'Trouser', status: 'Delivered', priority: 'Low', orderDate: '2026-09-20', deliveryDate: '2026-10-05', amount: 800, fabricName: 'Grey Polyester', measurementId: 'M001' },
-  { id: 'ORD-012', customerId: 'C004', customerName: 'Ananya Reddy', garmentType: 'Lehenga', status: 'Cancelled', priority: 'Normal', orderDate: '2026-10-22', deliveryDate: '2026-11-10', amount: 7200, fabricName: 'Maroon Silk', measurementId: 'M004', notes: 'Customer cancelled - changed design' },
-  { id: 'ORD-013', customerId: 'C007', customerName: 'Karan Malhotra', garmentType: 'Waistcoat', status: 'Ready for Delivery', priority: 'High', orderDate: '2026-10-26', deliveryDate: '2026-11-13', amount: 2200, fabricName: 'Brown Herringbone', measurementId: 'M007' },
-  { id: 'ORD-014', customerId: 'C006', customerName: 'Sneha Patel', garmentType: 'Kurta', status: 'Pending', priority: 'Normal', orderDate: '2026-11-11', deliveryDate: '2026-11-28', amount: 1400, fabricName: 'Yellow Cotton', measurementId: 'M006' },
-  { id: 'ORD-015', customerId: 'C002', customerName: 'Priya Sharma', garmentType: 'Designer Gown', status: 'In Progress', priority: 'Urgent', orderDate: '2026-11-03', deliveryDate: '2026-11-16', amount: 5800, fabricName: 'Black Sequin', measurementId: 'M002', notes: 'Award function gown' },
+  { id: 'ORD-001', customerId: 'C001', customerName: 'Sajjad Chana', garmentType: 'Sherwani', status: 'In Progress', priority: 'High', orderDate: '2026-11-01', deliveryDate: '2026-11-20', amount: 4500, fabricName: 'Cream Silk Brocade', measurementId: 'M001', notes: 'Wedding sherwani - need gold embroidery' },
+
+  { id: 'ORD-002', customerId: 'C002', customerName: 'Kanzal', garmentType: 'Lehenga', status: 'Ready for Trial', priority: 'Urgent', orderDate: '2026-10-25', deliveryDate: '2026-11-15', amount: 8200, fabricName: 'Red Velvet', measurementId: 'M002', notes: 'Reception lehenga with heavy work' },
+
+  { id: 'ORD-003', customerId: 'C003', customerName: 'Muhammad Hamza', garmentType: 'Suit', status: 'Pending', priority: 'Normal', orderDate: '2026-11-08', deliveryDate: '2026-11-25', amount: 3200, fabricName: 'Navy Wool Blend', measurementId: 'M003' },
+
+  { id: 'ORD-004', customerId: 'C004', customerName: 'Noman', garmentType: 'Salwar Suit', status: 'Delivered', priority: 'Normal', orderDate: '2026-10-10', deliveryDate: '2026-10-28', amount: 2400, fabricName: 'Cotton Printed', measurementId: 'M004' },
+
+  { id: 'ORD-005', customerId: 'C005', customerName: 'Abdul Rehman', garmentType: 'Pathani', status: 'Ready for Delivery', priority: 'Normal', orderDate: '2026-10-28', deliveryDate: '2026-11-12', amount: 1800, fabricName: 'Olive Cotton', measurementId: 'M005' },
+
+  { id: 'ORD-006', customerId: 'C006', customerName: 'Ayesha Fatima', garmentType: 'Kurta', status: 'In Progress', priority: 'Normal', orderDate: '2026-11-05', deliveryDate: '2026-11-18', amount: 1200, fabricName: 'White Linen', measurementId: 'M006' },
+
+  { id: 'ORD-007', customerId: 'C007', customerName: 'Muhammad Usman', garmentType: 'Blazer', status: 'Ready for Trial', priority: 'High', orderDate: '2026-10-30', deliveryDate: '2026-11-14', amount: 3800, fabricName: 'Charcoal Tweed', measurementId: 'M007' },
+
+  { id: 'ORD-008', customerId: 'C008', customerName: 'Maryam Noor', garmentType: 'Designer Gown', status: 'Pending', priority: 'Urgent', orderDate: '2026-11-10', deliveryDate: '2026-11-22', amount: 6500, fabricName: 'Teal Chiffon', measurementId: 'M008', notes: 'Party wear gown' },
+
+  { id: 'ORD-009', customerId: 'C009', customerName: 'Ahmed Raza', garmentType: 'Formal Shirt', status: 'Delivered', priority: 'Low', orderDate: '2026-10-15', deliveryDate: '2026-10-30', amount: 900, fabricName: 'Blue Cotton', measurementId: 'M001' },
+
+  { id: 'ORD-010', customerId: 'C010', customerName: 'Hira Malik', garmentType: 'Salwar Suit', status: 'In Progress', priority: 'Normal', orderDate: '2026-11-06', deliveryDate: '2026-11-19', amount: 2600, fabricName: 'Pink Georgette', measurementId: 'M002' },
+
+  { id: 'ORD-011', customerId: 'C001', customerName: 'Sajjad Chana', garmentType: 'Trouser', status: 'Delivered', priority: 'Low', orderDate: '2026-09-20', deliveryDate: '2026-10-05', amount: 800, fabricName: 'Grey Polyester', measurementId: 'M001' },
+
+  { id: 'ORD-012', customerId: 'C004', customerName: 'Noman', garmentType: 'Lehenga', status: 'Cancelled', priority: 'Normal', orderDate: '2026-10-22', deliveryDate: '2026-11-10', amount: 7200, fabricName: 'Maroon Silk', measurementId: 'M004', notes: 'Customer cancelled - changed design' },
+
+  { id: 'ORD-013', customerId: 'C007', customerName: 'Muhammad Usman', garmentType: 'Waistcoat', status: 'Ready for Delivery', priority: 'High', orderDate: '2026-10-26', deliveryDate: '2026-11-13', amount: 2200, fabricName: 'Brown Herringbone', measurementId: 'M007' },
+
+  { id: 'ORD-014', customerId: 'C006', customerName: 'Ayesha Fatima', garmentType: 'Kurta', status: 'Pending', priority: 'Normal', orderDate: '2026-11-11', deliveryDate: '2026-11-28', amount: 1400, fabricName: 'Yellow Cotton', measurementId: 'M006' },
+
+  { id: 'ORD-015', customerId: 'C002', customerName: 'Kanzal', garmentType: 'Designer Gown', status: 'In Progress', priority: 'Urgent', orderDate: '2026-11-03', deliveryDate: '2026-11-16', amount: 5800, fabricName: 'Black Sequin', measurementId: 'M002', notes: 'Award function gown' },
 ]
 
 export const measurements: MeasurementRecord[] = [
@@ -177,13 +200,19 @@ export const garmentStyles: GarmentStyle[] = [
 ]
 
 export const messages: Message[] = [
-  { id: 'MSG001', customerId: 'C002', customerName: 'Priya Sharma', type: 'trial_reminder', content: 'Trial reminder: Your Lehenga is ready for fitting. Please visit tomorrow.', timestamp: '2026-11-12T10:30:00', read: false },
-  { id: 'MSG002', customerId: 'C005', customerName: 'Vikram Singh', type: 'delivery_ready', content: 'Good news! Your Pathani Suit is ready for delivery.', timestamp: '2026-11-12T09:15:00', read: false },
-  { id: 'MSG003', customerId: 'C001', customerName: 'Arjun Mehta', type: 'order_update', content: 'Your Sherwani order (ORD-001) is now in progress.', timestamp: '2026-11-11T16:45:00', read: true },
-  { id: 'MSG004', customerId: 'C008', customerName: 'Divya Nair', type: 'measurement_confirm', content: 'Measurements confirmed for Designer Gown. Thank you!', timestamp: '2026-11-11T14:20:00', read: true },
-  { id: 'MSG005', customerId: 'C007', customerName: 'Karan Malhotra', type: 'trial_reminder', content: 'Trial reminder: Blazer fitting scheduled for today 4 PM.', timestamp: '2026-11-11T11:00:00', read: true },
-  { id: 'MSG006', customerId: 'C004', customerName: 'Ananya Reddy', type: 'delivery_ready', content: 'Your Salwar Suit has been delivered successfully. Thank you!', timestamp: '2026-10-28T15:30:00', read: true },
-  { id: 'MSG007', customerId: 'C010', customerName: 'Ishita Gupta', type: 'order_update', content: 'New order confirmed: Salwar Suit (ORD-010). Expected delivery Nov 19.', timestamp: '2026-11-06T13:00:00', read: true },
+  { id: 'MSG001', customerId: 'C002', customerName: 'Kanzal', type: 'trial_reminder', content: 'Trial reminder: Your Lehenga is ready for fitting. Please visit tomorrow.', timestamp: '2026-11-12T10:30:00', read: false },
+
+  { id: 'MSG002', customerId: 'C005', customerName: 'Abdul Rehman', type: 'delivery_ready', content: 'Good news! Your Pathani Suit is ready for delivery.', timestamp: '2026-11-12T09:15:00', read: false },
+
+  { id: 'MSG003', customerId: 'C001', customerName: 'Sajjad Chana', type: 'order_update', content: 'Your Sherwani order (ORD-001) is now in progress.', timestamp: '2026-11-11T16:45:00', read: true },
+
+  { id: 'MSG004', customerId: 'C008', customerName: 'Maryam Noor', type: 'measurement_confirm', content: 'Measurements confirmed for Designer Gown. Thank you!', timestamp: '2026-11-11T14:20:00', read: true },
+
+  { id: 'MSG005', customerId: 'C007', customerName: 'Muhammad Usman', type: 'trial_reminder', content: 'Trial reminder: Blazer fitting scheduled for today 4 PM.', timestamp: '2026-11-11T11:00:00', read: true },
+
+  { id: 'MSG006', customerId: 'C004', customerName: 'Noman', type: 'delivery_ready', content: 'Your Salwar Suit has been delivered successfully. Thank you!', timestamp: '2026-10-28T15:30:00', read: true },
+
+  { id: 'MSG007', customerId: 'C010', customerName: 'Hira Malik', type: 'order_update', content: 'New order confirmed: Salwar Suit (ORD-010). Expected delivery Nov 19.', timestamp: '2026-11-06T13:00:00', read: true },
 ]
 
 export const measurementTemplates = [
